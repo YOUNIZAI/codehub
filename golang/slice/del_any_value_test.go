@@ -43,3 +43,16 @@ func TestDelSlice_2(t *testing.T){
 
 	fmt.Printf("valie:%v",addApid)
 }
+
+func TestDelSlice_3(t *testing.T) {
+	b :=[]int{1,2,3,4,5}
+	i := 0
+	for k, n := range b {
+		if k==2 || k==4 {
+			b[i] = n
+			i++
+		}
+	}
+	b = b[:i]
+	fmt.Printf("b:%v \n",b)
+}
