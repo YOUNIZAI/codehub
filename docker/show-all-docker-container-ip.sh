@@ -1,0 +1,22 @@
+docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' c01c93c8b627
+85fbe60fe860
+f732ad0bb994
+76cd5a0a2647
+b0779061767c
+9d97efa76368
+28074222c670
+78db265882d3
+3cb938013d4f
+53ed879b11e5
+72b2d72bd8ad
+18b23a345f83
+758da70d4cbf
+f5f1d8a7b06c
+2502c09b11b9
+6bbb813bdf9a
+b9121a6bc0b8
+d24770d5d5b3
+585d2ad58634
+3e4f9fe527d3
+74b24317537b
+80e922009482
