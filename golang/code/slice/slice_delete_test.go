@@ -5,8 +5,8 @@ import (
 	"testing"
 )
 func TestMy(t *testing.T) {
-  	b :=[]int{1,2,3,4,5}
-//  	b :=[]int{1}
+//  	b :=[]int{1,2,3,4,5}
+  	b :=[]int{}
 //  	b :=[]int{}
 	i := 0
         fmt.Printf("p:%p\n",b)
