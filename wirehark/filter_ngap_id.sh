@@ -1,15 +1,30 @@
 #!/bin/bash
-## 脚本作用: 过滤当前目录下面*pcap* 文件 匹配特定NGAP ID, 并输出合并到一个文件
+## 脚本作用: 过滤当前目录下面*pcap* 文件 匹配特定NGAP ID（动态输入), 并输出合并到一个文件
 # 定义输出文件
-OUTPUT_FILE="filtered-2.pcap"
+OUTPUT_FILE="filtered-result.pcap"
 
 # 检查tshark是否安装
 if ! command -v tshark &> /dev/null; then
-    echo "错误: tshark未安装，请先安装tshark; sudo apt update ;sudo apt install -y tshark"
+    echo "错误: tshark未安装，请先安装tshark"
     exit 1
 fi
 
-# 检查并删除已存在的输出文件（避免追加到旧文件）
+# 提示用户输入NGAP ID
+read -p "请输入要过滤的NGAP ID: " NGAP_ID
+
+# 验证输入是否为空
+if [ -z "$NGAP_ID" ]; then
+    echo "错误: NGAP ID不能为空"
+    exit 1
+fi
+
+# 验证输入是否为数字
+if ! [[ "$NGAP_ID" =~ ^[0-9]+$ ]]; then
+    echo "错误: NGAP ID必须是数字"
+    exit 1
+fi
+
+# 检查并删除已存在的输出文件
 if [ -f "$OUTPUT_FILE" ]; then
     echo "发现已存在的输出文件，正在删除..."
     rm -f "$OUTPUT_FILE"
@@ -27,12 +42,12 @@ fi
 
 # 循环处理每个pcap文件
 for file in $PCAP_FILES; do
-    # 去除路径中的./前缀
     file=$(basename "$file")
-    
     echo "正在处理文件: $file"
-    tshark -r "$file" -Y "ngap && ngap.AMF_UE_NGAP_ID == 901599545869" -w - >> "$OUTPUT_FILE"
+    tshark -r "$file" -Y "ngap && ngap.AMF_UE_NGAP_ID == $NGAP_ID" -w - >> "$OUTPUT_FILE"
 done
 
 echo "处理完成，结果已保存到: $OUTPUT_FILE"
+    
+
     
