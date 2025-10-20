@@ -1,4 +1,4 @@
-package slice_test
+package any
 
 import (
 	"context"
@@ -27,34 +27,31 @@ func TestContex(t *testing.T){
     t.Logf("v:%v",v.Load().(int))
 
 
-	// 父context(利用根context得到)
-	ctx, _ := context.WithCancel(context.Background())
-	type favContextKey string
-	var key favContextKey
-	key = "wgh"
-	ctx = context.WithValue(ctx,key,"valu1")
-	t.Logf("value:%v",ctx.Value(key))
-	ctx = context.WithValue(ctx,key,"valu2")
-	t.Logf("value:%v",ctx.Value(key))
+    // 父context(利用根context得到)
+    ctx, cancel := context.WithCancel(context.Background())
+    defer cancel()
+    type favContextKey string
+    var key favContextKey
+    key = "wgh"
+    ctx = context.WithValue(ctx,key,"valu1")
+    t.Logf("value:%v",ctx.Value(key))
+    ctx = context.WithValue(ctx,key,"valu2")
+    t.Logf("value:%v",ctx.Value(key))
 
-	// 父context的子协程
-	go watch1(ctx)
+    // 使用同一个可取消的 context 启动两个协程，统一通过 cancel() 结束
+    go watch1(ctx)
+    go watch2(ctx)
 
-	// 子context，注意：这里虽然也返回了cancel的函数对象，但是未使用
-	valueCtx, chacancel := context.WithCancel(ctx)
-	// 子context的子协程
-	go watch2(valueCtx)
+    fmt.Println("现在开始等待3秒,time=", time.Now().Unix())
+    time.Sleep(3 * time.Second)
 
-	fmt.Println("现在开始等待3秒,time=", time.Now().Unix())
-	time.Sleep(3 * time.Second)
+    // 调用cancel()，确保两个协程都能及时退出
+    fmt.Println("等待3秒结束,调用cancel()函数")
+    cancel()
 
-	// 调用cancel()
-	fmt.Println("等待3秒结束,调用cancel()函数")
-	chacancel()
-
-	// 再等待5秒看输出，可以发现父context的子协程和子context的子协程都会被结束掉
-	time.Sleep(5 * time.Second)
-	fmt.Println("最终结束,time=", time.Now().Unix())
+    // 再等待5秒看输出，可以发现父context的子协程和子context的子协程都会被结束掉
+    time.Sleep(5 * time.Second)
+    fmt.Println("最终结束,time=", time.Now().Unix())
 }
 
 // 父context的协程

@@ -1,4 +1,4 @@
-package slice_test
+package test
 
 import (
 	"fmt"
@@ -62,8 +62,8 @@ func TestDelSlice_3(t *testing.T) {
 //时间复杂度：O(n)
 //空间复杂度：O(n)
 func TestDelSlice_4(t *testing.T) {
-    removeDuplication_map([]string{"1","2","2","3"))
-    removeDuplication_sort([]string{"1","2","2","3"))
+    removeDuplication_map([]string{"1","2","2","3"})
+    removeDuplication_sort([]string{"1","2","2","3"})
 }
 func removeDuplication_map(arr []string) []string {
     set := make(map[string]struct{}, len(arr))
